@@ -1,4 +1,4 @@
-name: Publish index.html from release asset
+name: Publish lightweight site from release asset
 
 on:
   workflow_dispatch:
@@ -15,32 +15,17 @@ jobs:
       - name: Download release asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release download v1.0.0 --pattern 'mis-trabajos.html' --dir /tmp/asset --clobber
-      - name: Place as index.html and commit
+        run: gh release download v1.1.0 --pattern 'mis-trabajos-light-v2.zip' --dir /tmp/asset --clobber
+      - name: Extract site and commit
         run: |
-          cp /tmp/asset/mis-trabajos.html index.html
+          rm -rf /tmp/site
+          mkdir -p /tmp/site
+          unzip -o /tmp/asset/mis-trabajos-light-v2.zip -d /tmp/site
+          cp /tmp/site/mis-trabajos-light/index.html index.html
+          rm -rf assets
+          cp -r /tmp/site/mis-trabajos-light/assets assets
           git config user.name "gallardospainting"
           git config user.email "gallardogeneralpaint@gmail.com"
-          git add index.html
-          git diff --cached --quiet || git commit -m "Add index.html from release asset v1.0.0"
+          git add index.html assets
+          git diff --cached --quiet || git commit -m "Publish lightweight site from release asset v1.1.0"
           git push
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
