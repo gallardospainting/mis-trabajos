@@ -14,18 +14,18 @@ jobs:
         uses: actions/checkout@v4
       - name: Download release asset
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release download v1.2.0 --pattern 'mis-trabajos-light-v3.zip' --dir /tmp/asset --clobber
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download v1.3.0 --pattern 'mis-trabajos-light-v4.zip' --dir /tmp/asset --clobber
       - name: Extract site and commit
         run: |
           rm -rf /tmp/site
           mkdir -p /tmp/site
-          unzip -o /tmp/asset/mis-trabajos-light-v3.zip -d /tmp/site
+          unzip -o /tmp/asset/mis-trabajos-light-v4.zip -d /tmp/site
           cp /tmp/site/mis-trabajos-light/index.html index.html
           rm -rf assets
           cp -r /tmp/site/mis-trabajos-light/assets assets
           git config user.name "gallardospainting"
           git config user.email "gallardogeneralpaint@gmail.com"
           git add index.html assets
-          git diff --cached --quiet || git commit -m "Publish lightweight site from release asset v1.2.0"
+          git diff --cached --quiet || git commit -m "Publish lightweight site from release asset v1.3.0"
           git push
